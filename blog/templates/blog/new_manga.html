@@ -1,0 +1,54 @@
+{% extends 'blog/base.html' %}
+<!-- Carica i file CSS di Select2 -->
+
+
+
+{% block content %}
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Carica i file JavaScript di Select2 -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<h2>{{ action }}</h2>
+<form method="POST" class="post-form" enctype="multipart/form-data">{% csrf_token %}
+ {{ form.as_p }}
+<p><b>Non cè il tag? Aggiungilo:</b><br>
+<input type="text" id="newTag" style="width:50%" />
+ <button type="button" id="InsertNewTag" class="btn btn-default" >Insert newTag</button></p>
+ <button type="submit" class="save btn btn-default">Save</button>
+</form>
+
+<script type="text/javascript">
+$(document).ready(function() {
+ $('#id_tags').addClass('select2-multiple').select2({
+     placeholder: "Seleziona i tag",
+     allowClear: true,
+    });
+ $( "span.select2-container" ).css( "width", "75%")
+ $("#InsertNewTag").on("click", function(){
+  var tag = $("#newTag").val();
+  $.ajax({
+		url: "{% url 'newTag' %}",
+		type: "POST",
+		data:{"newTag":tag, 'csrfmiddlewaretoken':$( "input[name='csrfmiddlewaretoken']" ).val()},
+		dataType: "json",
+		success: (data) => {
+			console.log(data);
+            $('#id_tags').append($('<option>', {
+            value: tag,
+            text : tag
+        }));
+			alert(data.message);
+			$("#newTag").val("");
+
+		},
+		error: (error) => {
+			console.log(error);
+		}
+  });
+ });
+});
+</script>
+
+{% endblock %}

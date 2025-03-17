@@ -1,0 +1,37 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    <div class="post" >
+      <h1>{{manga.title}}
+        <a class="btn btn-default" style="float:right" href="{% url 'manga_edit' title=manga.title %}">
+          {% include './icons/pencil-fill.svg' %}
+        </a>
+    <aside class="actions">
+</aside>
+      </h1>
+      <h2>{{manga.author}}</h2>
+
+
+        <img style="float:left;width:250px;padding:5px" src="{{manga.urlImage}}" />
+<p style="padding-left:10px;color:white">{{ manga.description }}</p>
+{% for tag in manga.tags.all %}
+
+        <span class="badge badge-{{tag.color}}"> {{tag.tag}}</span>
+        {% endfor %}
+
+
+    </div>
+<p style="color:white" id="chapterList">
+
+    <table style="color:white;width: inherit;">
+    {% for chap in chapters %}
+    <tr>
+        <td style="float:left"><a href="{{ chap.url }}" target="_blank">{{ chap.title }}</a></td>
+        <td></td>
+        <td  style="float:right">{{ chap.date }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+</p>
+{% endblock %}

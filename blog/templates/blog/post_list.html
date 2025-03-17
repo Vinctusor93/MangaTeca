@@ -1,0 +1,89 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+  <!--  <table style="width: inherit;">
+        <tr>
+            <td style="display: grid;place-items: center;" >
+                <button type="submit" class="save btn btn-default">Save</button>
+            </td>
+                        <td>
+                <button type="submit" class="save btn btn-default">Save</button>
+            </td>
+                        <td>
+                <button type="submit" class="save btn btn-default">Save</button>
+            </td>
+        </tr>
+    </table> -->
+    <table class="Mangalist">
+    {% if Mangalist %}
+                {% for manga in Mangalist %}
+            {% if forloop.counter0|divisibleby:6  %}
+              <tr>
+            {% endif %}
+            <td class="manga {% for tag in manga.tags.all %}{{ tag.getTagAsattributeClassHtml }} {% endfor %}">
+              <a href="{% url 'manga_detail' title=manga.title   %}">
+            
+                   <img class="manga" src="{{ manga.urlImage }}" >
+
+                <span class="titleManga">
+                    {% if manga.title|length > 25 %}
+                        {{ manga.title|truncatechars:20 }}... <br> {{manga.titleUrl}}
+                  {% else %}
+                    {{ manga.title }} <br> {{manga.titleUrl}}
+
+                   {% endif %}
+
+                </span>
+              </a>
+            </td>
+
+            {% if forloop.last and forloop.counter0|add:1|divisibleby:6 %}
+
+              </tr>
+              <tr>
+            {% endif %}
+
+            {% if forloop.last %}
+
+              <td class="addElement">
+                <a href="{% url 'manga_new' %}">
+                  <div style="width: 100%;height: 100%;box-sizing: border-box;text-align: center;top: 40%;position: relative;color:GREEN;">
+                    <i class="bi bi-patch-plus" style=" font-size: xx-large;"></i></br>Add Element
+                  </div>
+                </a>
+              </td>
+             {% endif %}
+
+            {% if forloop.counter0|add:1|divisibleby:6 or forloop.last %}
+              </tr>
+             {% endif %}
+
+
+       {% endfor %}
+
+      {% else %}
+<tr>
+  <td class="addElement">
+                <a href="{% url 'manga_new' %}">
+                  <div style="width: 100%;height: 100%;box-sizing: border-box;text-align: center;top: 50%;position: relative;color:GREEN;">
+                    <i class="lni lni-plus-circle-dashed"></i> Add Element
+                  </div>
+                </a>
+              </td>
+</tr>
+      {% endif %}
+
+
+<tr>
+  {% for i in "x"|rjust:"6" %}
+<td></td>
+  {% endfor %}
+  </tr>
+    </table>
+
+<script>
+
+
+</script>
+
+{% endblock %}
