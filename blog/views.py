@@ -10,17 +10,16 @@ import requests
 from .forms.newMangaForm import NewMangaForm
 from .models import PostManga
 from .models import Tag
-
+import ast
 logger = logging.getLogger("Logger")
 
 
 # Create your views here.
 def post_list(request):
-
-
     logger.warning("post_list")
 #    posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
     mangas = PostManga.objects.all()
+    tags = Tag.objects.all()
     for manga in mangas:
 
 
@@ -33,9 +32,24 @@ def post_list(request):
             lastChapter = chapterList[1]
             element= lastChapter.find_all("span")
             #chapInfo = {"title":element[0].get_text(),"url":element[0].find("a").get('href'),"date":element[2].get_text()}
-            PostManga.objects.filter(title = manga.title).update(titleUrl=element[0].get_text())
-            logger.warning(element[0].get_text())
-    return render(request, 'blog/post_list.html', {'Mangalist': mangas})
+            PostManga.objects.filter(title = manga.title).update(lastChapter=element[0].get_text())
+            PostManga.objects.filter(title=manga.title).update(dateLastChapter=element[2].get_text())
+            logger.warning(lastChapter)
+    return render(request, 'blog/post_list.html', {'Mangalist': mangas,'TagList':tags})
+
+def tableMangaFilter(request):
+    logger.warning("filterTag")
+    filterTags = request.POST.get("filterTag")
+    filterTags = ast.literal_eval(filterTags)
+    logger.warning(filterTags)
+    resultManga = PostManga.objects.all()
+    for elem in filterTags:
+        logger.warning(elem)
+        resultManga = resultManga.filter(tags=elem)
+    json = {}
+
+
+    return render(request, 'blog/tableManga.html', {'Mangalist': resultManga})
 
 # Create your views here.
 def newTag(request):

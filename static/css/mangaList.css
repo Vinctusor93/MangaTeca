@@ -1,13 +1,16 @@
 .filterActived{
     color:BLACK;
-    background-color:#C25100
+    background-color:#C25100;
     }
 .filterDeactived{
-    color:C25100;
-    background:none
+    color:GREEN;
+    background:none;
     }
-
-.TagList{
-width: -webkit-fill-available !IMPORTANT;
-
+.TagElement{
+margin:2em;
 }
+.TagList{
+width: -webkit-fill-available;
+}
+
+

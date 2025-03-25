@@ -1,0 +1,49 @@
+
+
+.filterActived{
+    color:BLACK;
+    background-color:#C25100;
+    border-radius: 25px;
+    }
+.filterDeactived{
+    color:#C25100;
+    background:none;
+    border-radius: 25px;
+    }
+
+.tagFilterContainerActived{
+
+    color:BLACK;
+    background-color:#C25100;
+    border-radius: 10px;
+    }
+.tagFilterContainerDeactived{
+
+    color:#C25100;
+    background:none;
+    border: thin solid #C25100;
+    border-radius: 10px;
+
+    }
+
+
+.TagList{
+width: -webkit-fill-available !IMPORTANT;
+}
+
+.TagElement{
+padding:2em;
+color:GREY;
+}
+
+.mangaImage{
+     width: 200px; /* Modifica la dimensione dell'immagine secondo necessità */
+     height: auto;
+
+}
+
+.TagLabel{
+font-family: 'Lobster', cursive;
+font-size: x-large;
+padding:2em;
+}

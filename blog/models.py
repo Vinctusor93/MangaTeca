@@ -19,7 +19,8 @@ class Tag(models.Model):
 
 class PostManga(models.Model):
     title = models.CharField(max_length=400,primary_key=True)
-    titleUrl = models.CharField(max_length=100)
+    lastChapter = models.CharField(max_length=100)
+    dateLastChapter = models.CharField(max_length=20)
     author = models.CharField(max_length=50)
     description = models.TextField()
     date_created = models.DateField(auto_now=True)
