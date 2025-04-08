@@ -101,7 +101,7 @@ table.Mangalist {
      text-align: center;
  }
 
-  span.titleManga,label{
+  span.titleManga{
  color:white;
  }
 
@@ -114,13 +114,4 @@ position: fixed;
 height: 100%;
 }
 
-input,textarea{
-color:white;
-background:black;
-border: 1px solid white}
 
-.select2-container--default.select2-container--focus,.select2-selection--multiple{
-
-background:black !IMPORTANT;
-border: 1px solid white;
-}

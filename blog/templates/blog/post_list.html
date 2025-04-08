@@ -2,14 +2,13 @@
 
 {% block content %}
 <p class="d-inline-flex gap-1">
-  <div class="tagFilterContainerDeactived" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+  <div class="tagFilterContainerDeactived" data-bs-toggle="collapse" href="#collapseTags" role="button" aria-expanded="false" aria-controls="collapseTags">
   
-    <span class="TagLabel">Tags</span>
+    <span class="tagLabel">Tags</span>
 
   </div>
 
-</p>
-<div class="collapse" id="collapseExample">
+<div class="collapse" id="collapseTags">
     <div>
         {% csrf_token %}
         <table class="TagList">
@@ -19,7 +18,7 @@
               <tr>
             {% endif %}
                                  <td class="TagElement">
-                    <button type="button" class="filterDeactived btn btn-default filter{{ tag.getTagAsattributeClassHtml }}" onclick="filter('{{ tag.getTagAsattributeClassHtml }}')">{{tag.tag}}</button>
+                    <button type="button" class="filterDeactived btn btn-default filter{{ tag.getTagAsattributeClassHtml }}" onclick="filterTag(this)">{{tag.tag}}</button>
                 </td>
 
 
@@ -32,20 +31,56 @@
     </div>
 </div>
 
+<br/>
+  <div class="statusFilterContainerDeactived" data-bs-toggle="collapse" href="#collapseStatus" role="button" aria-expanded="false" aria-controls="collapseStatus">
+
+    <span class="statusLabel">Status</span>
+
+  </div>
+
+<div class="collapse" id="collapseStatus">
+    <div>
+        {% csrf_token %}
+        <table class="StatusList">
+            {% if statusList %}
+                {% for status in statusList %}
+                {% if forloop.counter0|divisibleby:6  %}
+              <tr>
+            {% endif %}
+                                 <td class="TagElement">
+                    <button type="button" class="filterDeactived btn btn-default filterStatus" onclick="filterStatus(this)">{{ status }}</button>
+                </td>
+
+
+            {% if forloop.counter0|add:1|divisibleby:6 or forloop.last %}
+              </tr>
+             {% endif %}
+{% endfor %}
+{% endif %}
+        </table>
+    </div>
+</div>
+
+</p>
+
+
+
+
+
 <div id="tableMangaContainer">
 {% include './tableManga.html' with MangaList=Mangalist %}
 </div>
 <script>
 
 var tagsActivated = []
+var statusState = ""
 
-    function filter(tag){
+    function filterTag(tag){
 
+    var tagSelected = $(tag)
+    console.log(tagSelected)
+    var indexTag = tagsActivated.indexOf(tagSelected.text())
 
-
-    var manga = $(".manga")
-    var tagSelected = $(".filter"+tag);
-    var indexTag = tagsActivated.indexOf(tag)
     console.log(indexTag)
     if(indexTag > -1){
         tagsActivated.splice(indexTag,1)
@@ -61,7 +96,43 @@ var tagsActivated = []
       $.ajax({
 		url: "{% url 'tableMangaFilter' %}",
 		type: "POST",
-		data:{"filterTag":jsonResult, 'csrfmiddlewaretoken':$( "input[name='csrfmiddlewaretoken']" ).val()},
+		data:{"filterTag":jsonResult,"status": statusState, 'csrfmiddlewaretoken':$( "input[name='csrfmiddlewaretoken']" ).val()},
+		success: (data) => {
+
+            $("#tableMangaContainer").html(data)
+
+		},
+		error: (error) => {
+			console.log(error);
+		}
+  });
+
+}
+
+        function filterStatus(status){
+
+    var StatusSelected = $(status)
+
+
+
+    if(StatusSelected.hasClass("filterActived")){
+
+        StatusSelected.removeClass("filterActived");
+        StatusSelected.addClass("filterDeactived");
+        statusState = ""
+    }
+    else{
+        var statusButtons = $(".filterStatus").removeClass("filterActived");
+        var statusButtons = $(".filterStatus").addClass("filterDeactived");
+        StatusSelected.addClass("filterActived");
+        StatusSelected.removeClass("filterDeactived");
+
+        statusState=StatusSelected.text()}
+var jsonResult = JSON.stringify(tagsActivated)
+      $.ajax({
+		url: "{% url 'tableMangaFilter' %}",
+		type: "POST",
+		data:{"filterTag":jsonResult,"status": statusState, 'csrfmiddlewaretoken':$( "input[name='csrfmiddlewaretoken']" ).val()},
 		success: (data) => {
 
             $("#tableMangaContainer").html(data)

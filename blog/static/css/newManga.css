@@ -1,0 +1,29 @@
+input,textarea{
+color:white;
+background:black;
+border: 1px solid white}
+
+.select2-container--default.select2-container--focus,.select2-selection--multiple{
+
+background:black !IMPORTANT;
+border: 1px solid white;
+}
+
+option{
+background-color: BLACK !important;
+color:white !important;
+}
+
+select{
+background:none !important;
+color:white !important;
+}
+
+ul.select2-results__options > li{
+    background-color: BLACK ;
+color:WHITE !important;
+}
+
+b,label{
+color:white;
+}

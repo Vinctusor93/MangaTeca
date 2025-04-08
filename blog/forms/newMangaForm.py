@@ -28,7 +28,7 @@ class NewMangaForm(forms.ModelForm):
     #title= f.CharField(max_length=100)
     class Meta:
         model = PostManga
-        fields = ('title','author','urlImage','description','tags')
+        fields = ('title','author','status','urlImage','description','tags')
         widgets = {
             'tags': Select2MultipleWidget
         }

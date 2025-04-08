@@ -11,13 +11,13 @@
     border-radius: 25px;
     }
 
-.tagFilterContainerActived{
+.tagFilterContainerActived,.statusFilterContainerActived{
 
     color:BLACK;
     background-color:#C25100;
     border-radius: 10px;
     }
-.tagFilterContainerDeactived{
+.tagFilterContainerDeactived,.statusFilterContainerDeactived{
 
     color:#C25100;
     background:none;
@@ -42,7 +42,7 @@ color:GREY;
 
 }
 
-.TagLabel{
+.tagLabel,.statusLabel{
 font-family: 'Lobster', cursive;
 font-size: x-large;
 padding:2em;

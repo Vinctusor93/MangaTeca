@@ -9,13 +9,16 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
+import logging
 import os
 import sys
 from pathlib import Path
 
+from django.conf.global_settings import LOGIN_URL
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+logging.warning(BASE_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -27,7 +30,8 @@ SECRET_KEY = 'django-insecure-7aov(8qm)ynty!*skm%rmca9_+d2z%$3zgn)hzp1s)5*uw3mjc
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+CSRF_TRUSTED_ORIGINS = []
+LOGIN_URL = "members/login"
 
 # Application definition
 
@@ -39,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blog.apps.BlogConfig',
+    'members.apps.MembersConfig',
     'django_select2',
     'jquery',
     'bootstrap5'
@@ -155,3 +160,4 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+AUTH_USER_MODEL = "members.CustomUser"
