@@ -1,0 +1,10 @@
+        fieldset {
+
+            border: 2px solid white;
+            padding: 10px;
+        }
+
+        legend {
+            font-weight: bold;
+            color: white;
+            padding: 2px 8px;
