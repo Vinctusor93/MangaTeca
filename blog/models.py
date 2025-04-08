@@ -18,14 +18,21 @@ class Tag(models.Model):
         ordering = ['tag']
 
 class PostManga(models.Model):
-    title = models.CharField(max_length=400,primary_key=True)
+    STATUS_MANGA = [
+        ("In corso","In corso"),
+        ("Completato","Completato"),
+        ("Lasciato momentaneamente","Lasciato momentaneamente"),
+    ]
+    id = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=400,unique=True)
     lastChapter = models.CharField(max_length=100)
     dateLastChapter = models.CharField(max_length=20)
-    author = models.CharField(max_length=50)
-    description = models.TextField()
+    author = models.CharField(max_length=150,blank=True)
+    description = models.TextField(blank=True)
+    status = models.CharField(max_length=150, choices=STATUS_MANGA, default="In corso")
     date_created = models.DateField(auto_now=True)
     urlImage = models.URLField(max_length=300)
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag,blank=True,null=True)
     image = models.FileField(null=True,blank=True,upload_to="images/manga/")
 
     def getUrlManga(self):
