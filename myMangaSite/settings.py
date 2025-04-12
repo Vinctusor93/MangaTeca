@@ -42,8 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'blog.apps.BlogConfig',
-    'members.apps.MembersConfig',
+    'blog',
+    'members',
     'django_select2',
     'jquery',
     'bootstrap5'
@@ -158,6 +158,5 @@ MEDIA_URL = '/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
+AUTH_USER_MODEL = 'members.CustomUser'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-AUTH_USER_MODEL = "members.CustomUser"

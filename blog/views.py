@@ -1,6 +1,5 @@
 import logging
 import random
-# .forms.editPostForm import EditPostForm
 import re
 import bs4
 from django.contrib.auth.decorators import login_required
@@ -11,6 +10,7 @@ import requests
 from .forms.newMangaForm import NewMangaForm
 from .models import PostManga
 from .models import Tag
+from members.models import CustomUser
 import ast
 logger = logging.getLogger("Logger")
 
@@ -19,15 +19,16 @@ logger = logging.getLogger("Logger")
 def post_list(request):
     logger.warning("post_list")
     logger.warning(request.user)
+    user = request.user
 
 #    posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
-    mangas = PostManga.objects.all()
+    mangas = user.mangaUser.all() #PostManga.objects.all()
     tags = Tag.objects.all()
     for manga in mangas:
         url= manga.getUrlManga()
         response = requests.get(url)
         soup = bs4.BeautifulSoup(response.text,'html.parser')
-     #   logger.warning(soup)
+        logger.warning(url)
         chapterList = soup.find_all('div',class_='row')
         if len(chapterList) > 0:
             lastChapter = chapterList[1]
@@ -87,6 +88,9 @@ def manga_new(request):
         if form.is_valid():
             logger.warning("manga_new:form is valid")
             manga=form.save()
+            user = request.user
+            user.mangaUser.add(manga)
+            user.save()
             return redirect('post_list')
         else:
             logger.warning("manga_new:form is not valid")
@@ -138,6 +142,10 @@ def manga_detail(request, title):
     if manga is not None:
         Tag = manga.tags
     return render(request, 'blog/post_detail.html', {'manga': manga,'tags':Tag,'chapters':Chapters})
+
+@login_required
+def addManga(request):
+    return render(request, 'blog/addManga.html', {})
 
 
 
