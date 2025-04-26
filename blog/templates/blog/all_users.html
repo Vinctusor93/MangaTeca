@@ -1,0 +1,64 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+
+
+
+
+
+
+<div id="tableUserContainer">
+<table class="Userlist">
+    {% if UserList %}
+                {% for utente in UserList %}
+            {% if forloop.counter0|divisibleby:6  %}
+              <tr class="userRow">
+            {% endif %}
+            <td class="user" style="padding:2em;">
+              <a>
+
+                <div class="d-flex justify-content-center mb-4" id="avatarContainer">
+                  <img id="selectedAvatar" src="{{utente.photo.url}}"
+                  class="rounded-circle" style="width: 10em; height: 10em; object-fit: cover;" alt=" placeholder" />
+ 
+              </div>
+              <br>
+
+              <span class="Username" style="position: relative;left: 20%;">
+                {{ utente.get_username }}
+</span>       
+
+                  
+
+               
+              </a>
+            </td>
+
+            {% if forloop.last and forloop.counter0|add:1|divisibleby:6 %}
+                <!-- codice eseguito SOLO se addELement è primo elemento della nuova riga -->
+              </tr>
+              <tr class="userRow" >
+            {% endif %}
+
+
+
+            {% if forloop.counter0|add:1|divisibleby:6 or forloop.last %}
+              </tr>
+             {% endif %}
+
+
+       {% endfor %}
+
+      {% endif %}
+
+
+<tr>
+  {% for i in "x"|rjust:"6" %}
+<td class="userImage"></td>
+  {% endfor %}
+  </tr>
+    </table>
+</div>
+
+
+{% endblock %}

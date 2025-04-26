@@ -1,0 +1,53 @@
+<table class="Mangalist">
+    {% if Mangalist %}
+                {% for manga in Mangalist %}
+            {% if forloop.counter0|divisibleby:6  %}
+              <tr class="mangaRow">
+            {% endif %}
+            <td class="manga {% for tag in manga.tags.all %}{{ tag.getTagAsattributeClassHtml }} {% endfor %}">
+              <a href="{% url 'manga_detail' title=manga.title   %}">
+
+                   <img class="mangaImage" src="{{ manga.urlImage }}" ></br>
+
+                <span class="titleManga">
+                  {% if manga in myManga %} <span>Già nella lista</span>
+                  {% else %}
+                    {% if manga.title|length > 25 %}
+                        {{ manga.title|truncatechars:20 }}... </span> <br>
+                        
+                        
+                        <button class="btn btn-default" onclick="insertManga('List','{{ manga.id }}')"><i class="bi bi-list"></i> List </button> <button class="btn btn-default" onclick="insertManga('Favorite','{{ manga.id }}')" ><i class="bi bi-star"></i> Favorite</button> 
+                  {% else %}
+                    {{ manga.title }} </span> <br> 
+                        <button class="btn btn-default"  onclick="insertManga('List','{{ manga.id }}')" ><i class="bi bi-list"></i> List</button> <button class="btn btn-default"  onclick="insertManga('Favorite','{{ manga.id }}')" ><i class="bi bi-star"></i> Favorite</button>
+
+                   {% endif %}
+                  {% endif %}
+               
+              </a>
+            </td>
+
+            {% if forloop.last and forloop.counter0|add:1|divisibleby:6 %}
+                <!-- codice eseguito SOLO se addELement è primo elemento della nuova riga -->
+              </tr>
+              <tr class="mangaRow" >
+            {% endif %}
+
+
+
+            {% if forloop.counter0|add:1|divisibleby:6 or forloop.last %}
+              </tr>
+             {% endif %}
+
+
+       {% endfor %}
+
+      {% endif %}
+
+
+<tr>
+  {% for i in "x"|rjust:"6" %}
+<td class="mangaImage"></td>
+  {% endfor %}
+  </tr>
+    </table>

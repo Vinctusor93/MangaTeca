@@ -11,17 +11,27 @@
       </h1>
       <h2>{{manga.author}}</h2>
 
-
-        <img style="float:left;width:250px;padding:5px" src="{{manga.urlImage}}" />
+<div>
+        <img style="float:left;width:250px;padding:5px" src="{{manga.urlImage}}" /></div>
 <p style="padding-left:10px;color:white">{{ manga.description }}</p>
-{% for tag in manga.tags.all %}
-
-        <span class="badge badge-{{tag.color}}"> {{tag.tag}}</span>
-        {% endfor %}
-
-
     </div>
+    
 <p style="color:white" id="chapterList">
+  <div style="width:max-content;">
+    
+
+      
+      
+  </div>
+
+  <table style="color:white;width: inherit;">
+    <tr>
+      {% for tag in manga.tags.all %}
+        <td style="float:right;padding-left: 0.5em;"><span class="badge badge-{{tag.color}}"> {{tag.tag}}</span></td>
+        {% endfor %}
+    </tr>
+    
+</table>
 
     <table style="color:white;width: inherit;">
     {% for chap in chapters %}
