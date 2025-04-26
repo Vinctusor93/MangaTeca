@@ -8,6 +8,7 @@ urlpatterns = [
     path("login/", views.loginUser,name='loginUser'),
     path("createUser/", views.newUser,name='newUser'),
     path("logout/", views.logoutUser,name='logoutUser'),
+    path("reset_password/", views.resetPassword,name='resetPassword'),
 ]
 
 #accounts/login/ [name='login']
