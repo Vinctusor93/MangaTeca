@@ -142,3 +142,12 @@ a.sidebar-link:hover {
     transform: rotate(45deg);
     transition: all .2s ease-out;
 }
+
+#avatarContainer{
+    position: relative;
+    top: 1.5em;
+}
+
+#nameUser{
+    margin: 0.75em;
+}

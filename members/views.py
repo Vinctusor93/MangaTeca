@@ -33,10 +33,11 @@ def newUser(request):
         logging.warning("POST block")
         username = request.POST["username"]
         password = request.POST["password"]
+        file = request.FILES["avatar"]
         user = CustomUser.objects.filter(username=username)
 
         if user.count() == 0:
-            CustomUser.objects.create_user(username,"lennon@thebeatles.com", password)
+            CustomUser.objects.create_user(username=username,email="lennon@thebeatles.com", password=password,photo=file)
             return redirect("post_list")
             #CustomUser = CustomUser.object.create()
             # Redirect to a success page.
@@ -50,4 +51,22 @@ def newUser(request):
 
 def logoutUser(request):
     logout(request)
+    return redirect("loginUser")
+
+def resetPassword(request):
+    if request.method == "POST":
+        logging.warning("resetPassword")
+        
+        username = request.POST["username"]
+        password = request.POST["password"]
+        try:
+            u = CustomUser.objects.get(username=username)
+            u.set_password(password)
+            u.save()
+        except:
+            logging.warning("problema reset passwrod")
+            messages.error(request,"Problem reset password")
+            return redirect("resetPassword")
+    else:
+        return render(request,'reset_password.html',{})
     return redirect("loginUser")

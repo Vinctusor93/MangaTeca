@@ -6,3 +6,4 @@ from blog.models import PostManga
 class CustomUser(AbstractUser):
     mangaUser = models.ManyToManyField(PostManga,blank=True,related_name="userManga")
     favoriteMangaUser = models.ManyToManyField(PostManga,blank=True,related_name="favoriteManga")
+    photo = models.FileField(null=True,blank=True,upload_to="images/userProfile/",default="images/userProfile/default.png",)

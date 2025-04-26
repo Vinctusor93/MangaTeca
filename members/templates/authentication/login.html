@@ -25,12 +25,13 @@
 <label for="password" class="form-label">Password</label>
 <input type="password" class="form-control" id="password" name="password" placeholder="Password">
 </div>
+<span>Forgot Password? Click <a href="{% url 'resetPassword' %}">qui</a></span>
+<br/><br/>
+
     <span>Non sei registrato? registrati <a href="{% url 'newUser' %}">qui</a></span>
 <button type="submit" class="save btn btn-default">Confirm</button>
     </fieldset>
 </form>
-
-
 
 
 {% endblock %}

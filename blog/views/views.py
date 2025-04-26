@@ -7,25 +7,25 @@ from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.shortcuts import render, get_object_or_404
 import requests
-from .forms.newMangaForm import NewMangaForm
-from .models import PostManga
-from .models import Tag
+from ..forms.newMangaForm import NewMangaForm
+from ..models import PostManga
+from ..models import Tag
 from members.models import CustomUser
 import ast
 logger = logging.getLogger("Logger")
-
+from blog.views import ajax
 
 @login_required
 def post_list(request,type=None):
     logger.warning("post_list")
-  
+    favoriteManga = PostManga.objects.none
     user = request.user
-    
- 
     if type == "Favorite":
         mangas = user.favoriteMangaUser.all() #PostManga.objects.all()
     else:
         mangas = user.mangaUser.all() #PostManga.objects.all()
+        favoriteManga = user.favoriteMangaUser.all()
+    
     tags = Tag.objects.filter(postmanga__in=mangas).distinct()  
     logger.warning(tags)
     for manga in mangas:
@@ -42,47 +42,8 @@ def post_list(request,type=None):
             PostManga.objects.filter(title=manga.title).update(dateLastChapter=element[2].get_text())
       #      logger.warning(lastChapter)
     statusList = ["In corso","Completato","Lasciato momentaneamente"]
-    logger.warning(tags)
-    return render(request, 'blog/post_list.html', {'Mangalist': mangas,'TagList':tags,'statusList':statusList})
-
-def tableMangaFilter(request):
-    logger.warning("filterTag")
-    statusList = ["In corso", "Completato", "Lasciato momentaneamente"]
-    filterTags = request.POST.get("filterTag")
-    statusState = request.POST.get("status")
-    filterTags = ast.literal_eval(filterTags)
-    logger.warning(filterTags)
-    logger.warning(statusState)
-    user =request.user
-    
-    resultManga = user.mangaUser.all()
-    for elem in filterTags:
-
-        logger.warning(elem)
-        resultManga = resultManga.filter(tags=elem)
-    if statusState in statusList:
-        resultManga = resultManga.filter(status=statusState)
-
-    return render(request, 'blog/tableManga.html', {'Mangalist': resultManga})
-
-# Create your views here.
-def newTag(request):
-    logger.warning("newTag")
-    newTag = request.POST.get("newTag")
-  #  logger.warning(newTag)
-    tag = Tag.objects.filter(tag=newTag).count()
-    json = {}
-    if(tag != 0):
-        logger.warning("Tag esistente")
-        json["message"]= "Tag già esistente"
-    else:
-        items = ["primary","secondary","success","danger","warning","info","dark"]
-        color = random.choice(items)
-        logger.warning("Tag nuovo")
-        json["message"] = "Tag nuovo"
-        Tag.objects.create(tag=newTag,color=color)
-   # logger.warning(json)
-    return  JsonResponse(json)
+    logger.warning(favoriteManga)
+    return render(request, 'blog/post_list.html', {'Mangalist': mangas,'FavoriteMangalist': favoriteManga,'TagList':tags,'statusList':statusList})
 
 
 
@@ -111,6 +72,8 @@ def manga_new(request):
         logger.warning("manga_new else")
         form = NewMangaForm()
         return render(request, 'blog/new_manga.html', {'form': form})
+
+
 
 @login_required
 def manga_edit(request,title):
@@ -156,45 +119,23 @@ def manga_detail(request, title):
 
 @login_required
 def addManga(request):
+    allManga = PostManga.objects.all()
+    user = request.user
+    myManga = user.mangaUser.all()
     if request.method == "POST":
         form = NewMangaForm(request.POST,request.FILES)
         if form.is_valid():
             manga_new(request)
         else:
-            return render(request, 'blog/addManga.html', {})
-    return render(request, 'blog/addManga.html', {})
+            return render(request, 'blog/addManga.html', {"Mangalist":allManga,"myManga":myManga})
+    return render(request, 'blog/addManga.html', {"Mangalist":allManga,"myManga":myManga})
 
 @login_required
-def searchManga(request):
-    logger.warning("searchManga")
-    search = request.POST.get("searchWord")
-    #mangaFound = request.POST.get("elementsResult")
-    #logger.warning(mangaFound)
-    if search == '':
-        resultsAllManga = None
-    else:
-        resultsAllManga = PostManga.objects.filter(title__istartswith=search)
-        user = request.user
-        userManga = user.mangaUser.all()
-        logger.warning("eccomi "+str(userManga))
-        resultsManga = resultsAllManga.difference(userManga)
-    logger.warning("searchManga+1")
-    return render(request, 'blog/tableMangaSearch.html', {'Mangalist': resultsManga})
-
-@login_required
-def insertManga(request):
-    logger.warning("insertManga")
-    choice = request.POST.get("choice")
-    id = request.POST.get("id")
-    manga= PostManga.objects.get(id=id)
-    user = request.user
-    user.mangaUser.add(manga) 
-    if choice == "Favorite":
-        logger.warning("eccomi in list")
-        user.favoriteMangaUser.add(manga)        
-    user.save()
-    result = searchManga(request)
-    return result
+def user_list(request):
+    logger.warning("user_list")  
+    allUser = CustomUser.objects.all()
+    logger.warning(allUser)
+    return render(request, 'blog/all_users.html', {"UserList":allUser})
 
 
 

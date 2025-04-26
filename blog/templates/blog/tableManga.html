@@ -1,66 +1,94 @@
 <table class="Mangalist">
-    {% if Mangalist %}
-                {% for manga in Mangalist %}
-            {% if forloop.counter0|divisibleby:6  %}
-              <tr class="mangaRow">
-            {% endif %}
-            <td class="manga {% for tag in manga.tags.all %}{{ tag.getTagAsattributeClassHtml }} {% endfor %}">
-              <a href="{% url 'manga_detail' title=manga.title   %}">
+  {% if Mangalist %}
+              {% for manga in Mangalist %}
+          {% if forloop.counter0|divisibleby:6  %}
+            <tr class="mangaRow">
+          {% endif %}
+          <td class="manga {% for tag in manga.tags.all %}{{ tag.getTagAsattributeClassHtml }} {% endfor %}">
+            <a href="{% url 'manga_detail' title=manga.title   %}">
 
-                   <img class="mangaImage" src="{{ manga.urlImage }}" ></br>
+                  <img class="mangaImage" src="{{ manga.urlImage }}" ></a></br>
 
-                <span class="titleManga">
-                    {% if manga.title|length > 25 %}
-                        {{ manga.title|truncatechars:20 }}... <br> {{manga.lastChapter}} <br> {{manga.dateLastChapter}}
-                  {% else %}
-                    {{ manga.title }} <br> {{manga.lastChapter}} <br> {{manga.dateLastChapter}}
+              <span class="titleManga">
+                  {% if manga.title|length > 25 %}
+                    {% if manga in FavoriteMangalist %}<i class="bi bi-star-fill" onclick="manageFavorite(this,'{{manga.id}}')" ></i> {% else %} <i class="bi bi-star" onclick="manageFavorite(this,'{{manga.id}}')"></i> {% endif %}
+                      {{ manga.title|truncatechars:20 }}... <br> {{manga.lastChapter}} <br> {{manga.dateLastChapter}}
+                {% else %}
+                {% if manga in FavoriteMangalist %}<i class="bi bi-star-fill" onclick="manageFavorite(this,'{{manga.id}}')" ></i> {% else %} <i class="bi bi-star" onclick="manageFavorite(this,'{{manga.id}}')"></i> {% endif %}
+                  {{ manga.title }} <br> {{manga.lastChapter}} <br> {{manga.dateLastChapter}}
 
-                   {% endif %}
+                  {% endif %}
 
-                </span>
+              </span>
+            
+          </td>
+
+          {% if forloop.last and forloop.counter0|add:1|divisibleby:6 %}
+              <!-- codice eseguito SOLO se addELement è primo elemento della nuova riga -->
+            </tr>
+            <tr class="mangaRow" >
+          {% endif %}
+
+          {% if forloop.last %}
+
+            <td class="addElement">
+              <a href="{% url 'addManga' %}">
+                <div style="width: 100%;height: 100%;box-sizing: border-box;text-align: center;top: 40%;position: relative;color:GREEN;">
+                  <i class="bi bi-patch-plus" style=" font-size: xx-large;"></i></br>Add Element
+                </div>
               </a>
             </td>
-
-            {% if forloop.last and forloop.counter0|add:1|divisibleby:6 %}
-                <!-- codice eseguito SOLO se addELement è primo elemento della nuova riga -->
-              </tr>
-              <tr class="mangaRow" >
             {% endif %}
 
-            {% if forloop.last %}
-
-              <td class="addElement">
-                <a href="{% url 'manga_new' %}">
-                  <div style="width: 100%;height: 100%;box-sizing: border-box;text-align: center;top: 40%;position: relative;color:GREEN;">
-                    <i class="bi bi-patch-plus" style=" font-size: xx-large;"></i></br>Add Element
-                  </div>
-                </a>
-              </td>
-             {% endif %}
-
-            {% if forloop.counter0|add:1|divisibleby:6 or forloop.last %}
-              </tr>
-             {% endif %}
+          {% if forloop.counter0|add:1|divisibleby:6 or forloop.last %}
+            </tr>
+            {% endif %}
 
 
-       {% endfor %}
+      {% endfor %}
 
-      {% else %}
+    {% else %}
 <tr>
-  <td class="addElement">
-                <a href="{% url 'manga_new' %}">
-                  <div style="width: 100%;height: 100%;box-sizing: border-box;text-align: center;top: 50%;position: relative;color:GREEN;">
-                    <i class="lni lni-plus-circle-dashed"></i> Add Element
-                  </div>
-                </a>
-              </td>
+<td class="addElement">
+              <a href="{% url 'addManga' %}">
+                <div style="width: 100%;height: 100%;box-sizing: border-box;text-align: center;top: 50%;position: relative;color:GREEN;">
+                  <i class="lni lni-plus-circle-dashed"></i> Add Element
+                </div>
+              </a>
+            </td>
 </tr>
-      {% endif %}
+    {% endif %}
 
 
 <tr>
-  {% for i in "x"|rjust:"6" %}
+{% for i in "x"|rjust:"6" %}
 <td class="mangaImage"></td>
-  {% endfor %}
-  </tr>
-    </table>
+{% endfor %}
+</tr>
+  </table>
+<script>
+  function manageFavorite(element,id){
+    var choice
+    console.log(id)
+    if($(element).hasClass("bi-star-fill"))
+      choice = "removeFavorite"
+    else
+      choice = "addFavorite"
+    $.ajax({
+      url: "{% url 'manageFavorite' %}",
+      type: "POST",
+      data:{'choice':choice,'id':id, 'csrfmiddlewaretoken':$( "input[name='csrfmiddlewaretoken']" ).val()},
+      success: (data) => {
+        if($(element).hasClass("bi-star-fill"))
+          $(element).removeClass("bi-star-fill").addClass("bi-star")
+        else
+          $(element).removeClass("bi-star").addClass("bi-star-fill")
+        },
+        error: (error) => {
+        console.log(error);
+        }
+    });
+
+      console.log("addFavorite")
+  }
+</script>

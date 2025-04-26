@@ -1,14 +1,6 @@
-{% extends 'blog/base.html' %}
-<!-- Carica i file CSS di Select2 -->
 
 
 
-{% block content %}
-
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
-<!-- Carica i file JavaScript di Select2 -->
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <h2>{{ action }}</h2>
 <form method="POST" class="post-form" enctype="multipart/form-data">{% csrf_token %}
@@ -51,4 +43,4 @@ $(document).ready(function() {
 });
 </script>
 
-{% endblock %}
+

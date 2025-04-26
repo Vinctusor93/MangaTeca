@@ -14,9 +14,11 @@
         <table class="TagList">
             {% if TagList %}
                 {% for tag in TagList %}
+                
                 {% if forloop.counter0|divisibleby:6  %}
               <tr>
             {% endif %}
+
                                  <td class="TagElement">
                     <button type="button" class="filterDeactived btn btn-default filter{{ tag.getTagAsattributeClassHtml }}" onclick="filterTag(this)">{{tag.tag}}</button>
                 </td>

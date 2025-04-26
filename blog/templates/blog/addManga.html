@@ -1,0 +1,98 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Carica i file JavaScript di Select2 -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+{% csrf_token %}
+<div class="mb-3">
+    <label for="password" class="form-label">Search</label>
+    <input type="text" class="form-control" id="search" name="search" oninput="researchManga()" placeholder="Search Manga">
+    </div>
+
+
+
+
+<div id="tableMangaContainer">
+	{% include './tableMangaSearch.html' with MangaList=Mangalist myManga=myManga %}
+</div>
+
+<div id="newMangaContainer">
+
+</div>
+
+<script>
+
+function InsertNewManga(){
+    console.log("InsertNewManga ")
+  $.ajax({
+		url: "{% url 'manga_new' %}",
+		type: "POST",
+		data:{'ajax':"true",'csrfmiddlewaretoken':$( "input[name='csrfmiddlewaretoken']" ).val()},	
+		success: (data) => {
+			console.log(data.responseText);
+            $("#newMangaContainer").html(data)
+		},
+		error: (error) => {
+			console.log(error);
+		}
+  });
+}
+
+
+
+function researchManga() {
+    console.log("researchManga");
+  var text = $("#search").val();
+  console.log(text)
+  var result = $(".titleManga").text()
+
+let newManga = `<p><b>Non trovi il manga? Aggiungilo</b>
+ <button type="button" id="InsertNewManga" class="btn btn-default" onclick="InsertNewManga()" >Insert New Manga</button></p>`
+
+  $("#tableMangaContainer").html("You wrote: " + text) ;
+
+  $.ajax({
+		url: "{% url 'searchManga' %}",
+		type: "POST",
+		data:{"searchWord":text,'elementsResult':result, 'csrfmiddlewaretoken':$( "input[name='csrfmiddlewaretoken']" ).val()},
+		success: (data) => {
+
+            $("#tableMangaContainer").html(data + newManga)
+
+		},
+		error: (error) => {
+			console.log(error);
+		}
+  });
+
+}
+
+function insertManga(choice,id){
+	var text = $("#search").val();
+	console.log(id)
+
+let newManga = `<p><b>Non trovi il manga? Aggiungilo</b>
+ <button type="button" id="InsertNewManga" class="btn btn-default" onclick="InsertNewManga()" >Insert New Manga</button></p>`
+
+	$.ajax({
+		url: "{% url 'insertManga' %}",
+		type: "POST",
+		data:{"choice":choice,'searchWord':text,'id':id, 'csrfmiddlewaretoken':$( "input[name='csrfmiddlewaretoken']" ).val()},
+		success: (data) => {
+
+            $("#tableMangaContainer").html(data + newManga)
+
+		},
+		error: (error) => {
+			console.log(error);
+		}
+  });
+}
+
+</script>
+
+{% endblock %}
